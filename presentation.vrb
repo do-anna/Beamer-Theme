@@ -1,0 +1,19 @@
+\frametitle{Comandi usati II}
+
+\begin{itemize}
+\item Creazione dell'ideale $ pO_K $ e sua fattorizzazione:
+\begin{lstlisting}
+sage: I = K.ideal(p(i))
+sage: I.factor()
+\end{lstlisting}
+
+\item Creazione dell'omomorfismo $ \zeta \mapsto \zeta^f $:
+\begin{lstlisting}
+sage: Qn.hom([z**f])
+\end{lstlisting}
+
+\pause
+Comunque ora vedremo direttamente l'implementazione in \sage dei calcoli, presentata tramite \jupyter
+
+
+\end{itemize}	

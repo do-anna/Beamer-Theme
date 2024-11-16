@@ -1,0 +1,363 @@
+\documentclass[handout]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz-cd,wrapfig}
+\usepackage{tcolorbox}
+\usepackage{listings}
+
+%matematica
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{physics}
+\usepackage{siunitx}
+
+
+
+
+%For notes
+%\usepackage{pgfpages}
+%\setbeameroption{show notes on second screen}
+
+%Typeset for sage
+\lstdefinelanguage{Sage}[]{Python}
+{morekeywords={False,sage,True},sensitive=true}
+\lstset{
+  frame=none,
+  backgroundcolor=\color[RGB]{255,255,232},
+  showtabs=False,
+  showspaces=False,
+  showstringspaces=False,
+  commentstyle={\ttfamily\color{dgreencolor}},
+  keywordstyle={\ttfamily\color{dbluecolor}\bfseries},
+  stringstyle={\ttfamily\color{dgraycolor}\bfseries},
+  language=Sage,
+  basicstyle={\fontsize{10pt}{10pt}\ttfamily},
+  aboveskip=0.3em,
+  belowskip=0.1em,
+  numbers=left,
+  numberstyle=\footnotesize
+}
+\definecolor{dblackcolor}{rgb}{0.0,0.0,0.0}
+\definecolor{dbluecolor}{rgb}{0.01,0.02,0.7}
+\definecolor{dgreencolor}{rgb}{0.2,0.4,0.0}
+\definecolor{dgraycolor}{rgb}{0.30,0.3,0.30}
+\newcommand{\dblue}{\color{dbluecolor}\bf}
+\newcommand{\dred}{\color{dredcolor}\bf}
+\newcommand{\dblack}{\color{dblackcolor}\bf}
+
+%%%%%
+
+%Bibliography
+\usepackage[style=numeric, maxnames=4,backend=bibtex]{biblatex}
+% other styles: numeric authortitle
+\addbibresource{biblio.bib}
+\DeclareBibliographyCategory{fullcited} %for not citing in bibliography
+\newcommand{\mybibexclude}[1]{\addtocategory{fullcited}{#1}} 
+%%%%%
+
+%Infos
+\title{Measurement of the curvature of a mirror using a Michelson interferometer}
+\author{\\\textbf{Candidate:} Anna Do'\\ \textbf{Supervisor:} Giacomo Lamporesi }
+%\subtitle{}
+\date{20 November 2024}
+\institute{\\~\\Bachelor's Degree in Physics}
+%\titlegraphic{...} 
+
+%\usepackage{giacomo}
+%Theme settings
+%\usetheme{metropolis}
+\usetheme[physics]{beunitn}
+\usecolortheme{rose}
+\setbeamercovered{dynamic}
+
+
+
+% Theorem definitons 
+\theoremstyle{plain}
+\newtheorem{teo}{Teorema}[section]
+\newtheorem{lem}[teo]{Lemma}
+\newtheorem{prop}[teo]{Proposizione}
+\newtheorem{cor}[teo]{Corollario}
+\newtheorem*{form}{Formula}
+
+\theoremstyle{remark}
+\newtheorem{rem}{Osservazione}
+\newtheorem{rems}[rem]{Remarks}
+
+\theoremstyle{definition}
+\newtheorem{deff}[teo]{Definizione}
+\newtheorem{idea}{Idea}
+\newtheorem*{nota}{Notazione}
+
+% Commands 
+\newcommand{\sage}{\href{https://www.sagemath.org}{\includegraphics[height=\fontcharht\font`\B]{../images/sage.png} }}
+\newcommand{\jupyter}{\href{https://www.sagemath.org}{\includegraphics[height=\fontcharht\font`\B]{../images/jupyter.png} }}
+\newcommand{\noqed}{\let\qed\relax}
+\newcommand{\PS}{\mathcal{P}_S}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\ZZ}[1]{\mathbb{Z}_{#1}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+
+\DeclareMathOperator*{\eqb }{=}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\ord}{ord}
+\definecolor{lgreencolor}{rgb}{0.43,0.612,0.435} % Verde chiaro
+
+
+\newcommand{\mybox}[1]{\fcolorbox{lgreencolor}{lgreencolor}{#1}}
+
+
+\begin{document}
+
+	\begin{frame}[plain]
+	    \maketitle
+	\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Introduction}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+  
+  %This thesis is about an experiment whose aim is to analyse a method for correcting distortions in the spatial mode that may be present in the beam of 
+  %the laser of Virgo GW interferomete
+
+
+  The topics covered in this presentation are:
+  \begin{itemize}
+    \item Michelson interferometer
+    \item Two theoretical models: geometric optics and interference of Gaussian beam
+    \item Data analysis
+    \item Phase shift method
+  \end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width = 1\linewidth]{../latex/Immagini/foto set up/foto1.jpg}
+\end{figure}
+\end{column}
+\end{columns}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{frame}{Michelson interferometer/interference of light}
+
+    \begin{columns}
+      \begin{column}{0.5\textwidth}
+        The electric field can be expressed in the complex notation as:
+        \begin{equation*}
+          \vec{E}=\vec{E_0}e^{i\Phi}
+        \end{equation*}
+      If $\vec{E_1}$ and $\vec{E_2}$ are the electric in the two arms, the total 
+        filed is $\vec{E_{tot}}=\vec{E_1}+\vec{E_2}$, then the intensity on the screen is proportional to:
+        \begin{equation*}
+          I\propto<|\vec{E_{tot}}|^2>=2 I_0^2 [ 1+ \cos (\Phi_1-\Phi_2) ]=2 I_0^2 [ 1+ \cos(k\Delta z)]
+        \end{equation*}
+
+ 
+      \end{column}
+
+      \begin{column}{0.5\textwidth}
+        \begin{figure}[h!]
+          \centering
+          \includegraphics[width = 1\linewidth]{../latex/Immagini/3Dmickelson.jpg}
+        \end{figure}
+      \end{column}
+    \end{columns}
+   
+  \end{frame}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{frame}{Experimental set-up}
+  \vspace{-10pt}
+    \begin{figure}[h!]
+      \centering
+          \centering
+          \includegraphics[width = 0.9\linewidth]{../latex/Immagini/setup.png}
+  \end{figure}
+  \end{frame}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+    \begin{frame}{Experimental set-up}
+      \begin{figure}[h!]
+        \centering
+        \includegraphics[width = 0.8\linewidth]{../latex/Immagini/foto set up/foto2.jpg}
+      \end{figure}
+    \end{frame}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+  \begin{frame}{Geometric optics}
+    \begin{figure}[h!]
+      \centering
+      \includegraphics[width = 0.7\linewidth]{../latex/Immagini/geometrical_optics.jpg}
+    \end{figure}
+  The optical path difference in the two arms of the interferometer is:
+    {\small
+    \begin{align*}
+      \Delta z&=2d -(d+\overline{NM}+\overline{ML})=\frac{2(1-\cos\theta)[d+d\cos\theta+R\cos^2\theta]}{2cos^2\theta-1}\simeq\\
+      ~&\\
+        &\simeq\frac{r^2}{R^2}(2d+R)\simeq\frac{r^2}{R} \quad \rightarrow \quad \mybox{$I\propto\left[ 1+ \cos\left( \frac{k r^2}{R}\right)\right]$}
+      \end{align*}
+      
+    }
+
+  \end{frame}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{frame}{Gaussian beams}
+    The equation of a Gaussian beam is:
+    \begin{equation*}
+      E= E_{0} \frac{w_{0}}{w(z)}\exp\left(\frac{-r^2}{w^2(z)}\right)\exp\left[ik\left(z+\frac{r^2}{2R(z)}\right)-i\tan^{-1}\left(\frac{z}{z_{0}}\right)\right]
+    \end{equation*}
+    where:
+    \begin{equation*}
+      z_0=\frac{\pi w_0^2}{\lambda}\qquad w(z)=w_0\sqrt{1+\left(\frac{z}{z_0}\right)^2}\qquad R(z)=z\left[1+\left(\frac{z_0}{z}\right)^2\right]
+    \end{equation*}
+
+    Let us call  $\text{Beam}_1$ the beam reflected by the spherical mirror and $\text{Beam}_2$ the beam coming from the planar mirror:
+    \begin{tabular}{c|c|c|c|c}
+      ~&$w_0$ & $z_0$& $w(z)$ & $R(z)$\\
+      \hline
+      $\text{Beam}_1$&$\simeq 0.025~\unit{\milli\meter}$& $\simeq 3.8 ~\unit{\milli\meter}$& $w_{01}z_1/z_{01}$& $z_1$\\
+      $\text{Beam}_2$&$\simeq 5~\unit{\milli\meter}$& $\simeq 150 ~\unit{\meter}$& $w_{02}$& $z^2_{02}/z_2$\\
+  \end{tabular}
+
+  \end{frame}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{frame}{Gaussian beams}
+
+    The intensity of the electric magnetic field on the screen will be: 
+   {\footnotesize
+    \begin{align*}
+      &I\propto|E_{tot}|^2=\\
+      &~\\
+      &=E_0^2 \left\{ \exp \left( -\frac{2r^2}{w_{02}^2} \right) + \left( \frac{z_{01}}{z_1} \right)^2 \exp \left( -\frac{2r^2 z_{01}^2}{w_{01}^2 z_1^2} \right)+\right. \\
+      &\left. + \left( \frac{z_{01}}{z_1} \right) \exp \left[ -r^2 \left( \frac{1}{w_{02}^2} + \left(\frac{z_{01}}{w_{01} z_1}\right)^2 \right) \right]
+      2 \cos \left[ k(z_2 - z_1) + \frac{k r^2}{2} \left( \frac{z_2}{z_{02}^2} + \frac{1}{z_1} \right) \right] \right\}\simeq\\
+      &~\\
+      &\simeq  E_0^2 \left[ \exp \left( -\frac{2r^2}{w_{02}^2} \right) + \left( \frac{z_{01}}{z_1} \right)^2 + 
+      2 \left( \frac{z_{01}}{z_1} \right)^2 \exp \left( -\frac{r^2}{w_{02}^2} \right) \mybox{$\cos \left( \frac{k r^2}{R} \right)$} ~\right]
+    \end{align*}
+   }
+
+    
+  \end{frame}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{frame}{Data analysis}
+    The fit function is:
+    \begin{equation*}
+    I=A\left[ B^2 + \exp(-2ar^2)+2 B \exp(-ar^2)\cos(br^2+c)\right]
+    \end{equation*}
+
+    \begin{columns}
+      \begin{column}{0.5\textwidth}
+      where from the previous equation we have that: 
+      {\footnotesize
+      \begin{align*}
+       a&=\frac{1}{w_{02}^2} \qquad b=\frac{2\pi}{\lambda (R+2d)} \\
+       ~\\
+       B&=\frac{z_{01}}{z_1} \\
+      \end{align*}
+      }
+ 
+      \end{column}
+
+      \begin{column}{0.5\textwidth}
+        \begin{figure}[h!]
+          \centering
+          \begin{minipage}{1\textwidth}
+            \centering
+            \includegraphics[width = 1\linewidth, trim = 340pt 0pt 180pt 0pt , clip]{../latex/Immagini/data/cerchi.png}
+          \end{minipage}
+        \end{figure}
+      \end{column}
+    \end{columns}
+    
+  \end{frame}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{frame}{Data analysis}
+     
+    \begin{figure}[h!]
+      \centering
+      \begin{minipage}{0.8\textwidth}
+        \centering
+        \includegraphics[width = \linewidth]{../latex/Immagini/data/fit.png}
+    \end{minipage}
+   
+    \end{figure}
+
+
+    \begin{equation*}
+      R=\frac{2\pi}{b\lambda}=(2.57\pm0.01)~\unit{\meter}
+    \end{equation*}
+
+  \end{frame}
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{frame}{Phase shift interferometry}
+
+    Let us consider the intensity on the camera at different position of the planar mirror ($d+\delta \Phi_z$):
+    \begin{equation*}
+      I=A(x,y)\Big[1+B(x,y)\cos \Big(\Phi(x,y)+\delta \Phi_z \Big)\Big]+off(x,y)
+    \end{equation*}
+
+  The surface of the mirror $h(x,y)$ is related to the phase $\Phi(x,y)$:
+  \begin{equation*}
+    h(x,y)=\frac{\lambda}{4\pi} \Phi(x,y)
+  \end{equation*}
+
+
+  For fixed value of $r$, we observe that the intensity is a sinusoidal function of $\delta \Phi_z $:
+  \begin{equation*}
+    I(\delta \Phi_z )=A \sin(\delta \Phi_z +\Phi)+off=A \sin(n v \Delta t +\Phi)+off
+  \end{equation*}
+
+  \end{frame}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{frame}{Phase shift interferometry}
+      \begin{figure}[h!]
+        \centering
+        \begin{minipage}{0.49\textwidth}
+            \centering
+            \includegraphics[width = \linewidth]{../latex/Immagini/phase shift/x0_y0.png}
+        \end{minipage}
+        \begin{minipage}{0.49\textwidth}
+            \centering
+            \includegraphics[width = \linewidth]{../latex/Immagini/phase shift/x20_y50.png}
+        \end{minipage}
+        \caption{The first image is for the pixel with coordinates (0,0) and the second for the pixel with coordinates (20,50).}
+      \end{figure}
+            
+
+  \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \begin{frame}{Phase shift interferometry}
+    Analysis of the data performed by the code:
+
+    \begin{itemize}
+      \item[$\bullet$] get $\Phi$ from the data, there are two option:
+      \begin{itemize}
+        \item[$\circ$] sinusoidal fit
+        \item[$\circ$] fft : fast Fourier transform
+      \end{itemize}
+      
+      \item[$\bullet$] unwrap the phase $\Phi$
+
+      \item[$\bullet$] fit to get the parameter that describe the surface, there are two option:
+      \begin{itemize}
+        \item[$\circ$] {\tiny $\left[A \Big((y-y_c) \cos(\alpha) +(x-x_c) \sin(\alpha)\Big)^2 + B\Big((x-x_c)  \cos(\alpha) - (y-y_c)\sin(\alpha)\Big)^2\right] + \text{{o}} $ }
+        \item[$\circ$] Zernike polynomials
+      \end{itemize}
+    \end{itemize}
+    
+  \end{frame}
+
+\end{document}
